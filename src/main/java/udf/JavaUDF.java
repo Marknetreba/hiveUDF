@@ -3,12 +3,13 @@ package udf;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
+import org.apache.hadoop.hive.ql.exec.UDF;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class JavaUDF {
+public class JavaUDF extends UDF {
 
     public String checkIP(String ip) throws IOException, GeoIp2Exception {
 
