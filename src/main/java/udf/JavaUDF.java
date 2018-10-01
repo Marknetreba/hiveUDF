@@ -1,15 +1,21 @@
 package udf;
 
-import org.apache.commons.net.util.SubnetUtils;
-import org.apache.hadoop.hive.ql.exec.UDF;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CountryResponse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
 
-public class JavaUDF extends UDF {
+public class JavaUDF {
 
-    public ArrayList checkIP(String network) {
-        SubnetUtils utils = new SubnetUtils(network);
-        return new ArrayList(Arrays.asList(utils.getInfo().getAllAddresses()));
+    public String checkIP(String ip) throws IOException, GeoIp2Exception {
+
+        File database = new File("/Users/mnetreba/Downloads/mmdb/countries.mmdb");
+        DatabaseReader reader = new DatabaseReader.Builder(database).build();
+        InetAddress ipAddress = InetAddress.getByName(ip);
+        CountryResponse response = reader.country(ipAddress);
+        return response.getCountry().getNames().get("en");
     }
 }
