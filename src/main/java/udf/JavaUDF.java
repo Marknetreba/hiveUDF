@@ -13,7 +13,7 @@ public class JavaUDF extends UDF {
 
     public String checkIP(String ip) throws IOException, GeoIp2Exception {
 
-        File database = new File("/Users/mnetreba/Downloads/mmdb/countries.mmdb");
+        File database = new File("file:///Users/mnetreba/Downloads/mmdb/countries.mmdb");
         DatabaseReader reader = new DatabaseReader.Builder(database).build();
         InetAddress ipAddress = InetAddress.getByName(ip);
         CountryResponse response = reader.country(ipAddress);
