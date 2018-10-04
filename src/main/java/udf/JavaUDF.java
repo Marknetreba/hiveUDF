@@ -1,6 +1,7 @@
 package udf;
 
 import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
 import org.apache.hadoop.hive.ql.exec.UDF;
@@ -11,12 +12,18 @@ import java.net.InetAddress;
 
 public class JavaUDF extends UDF {
 
-    public String checkIP(String ip) throws IOException, GeoIp2Exception {
+    public String evaluate(String ip) throws IOException, GeoIp2Exception {
 
-        File database = new File("file:///Users/mnetreba/Downloads/mmdb/countries.mmdb");
-        DatabaseReader reader = new DatabaseReader.Builder(database).build();
+        File in = new File("/Users/mnetreba/Downloads/mmdb/countries.mmdb");
+
+        DatabaseReader reader = new DatabaseReader.Builder(in).build();
         InetAddress ipAddress = InetAddress.getByName(ip);
-        CountryResponse response = reader.country(ipAddress);
-        return response.getCountry().getNames().get("en");
+        try {
+            CountryResponse response = reader.country(ipAddress);
+            return response.getCountry().getNames().get("en");
+        }
+        catch (AddressNotFoundException ex) {
+            return "";
+        }
     }
 }
