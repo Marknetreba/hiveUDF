@@ -12,11 +12,20 @@ import java.net.InetAddress;
 
 public class JavaUDF extends UDF {
 
+    private File in = new File("/Users/mnetreba/Downloads/mmdb/countries.mmdb");
+    private DatabaseReader reader;
+
+    {
+        try {
+            reader = new DatabaseReader.Builder(in).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public String evaluate(String ip) throws IOException, GeoIp2Exception {
 
-        File in = new File("/Users/mnetreba/Downloads/mmdb/countries.mmdb");
-
-        DatabaseReader reader = new DatabaseReader.Builder(in).build();
         InetAddress ipAddress = InetAddress.getByName(ip);
         try {
             CountryResponse response = reader.country(ipAddress);
